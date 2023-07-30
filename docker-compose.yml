@@ -5,8 +5,6 @@ services:
     container_name: mosquitto
     image: docker.io/eclipse-mosquitto:latest
     restart: unless-stopped
-    extra_hosts:
-      - "influxdb:10.0.0.6"
     volumes:
       - ./mosquitto/config/:/mosquitto/config/ # sudo chown -R 1883:1883 ./mosquitto
       - ./mosquitto/pass:/mosquitto/pass
@@ -37,9 +35,6 @@ services:
     image: docker.io/telegraf
     container_name: telegraf
     restart: unless-stopped
-    extra_hosts:
-     - "influxdb:10.0.0.6"
-     - "mqtt:10.0.0.6"
     environment:
       HOST_PROC: /rootfs/proc
       HOST_SYS: /rootfs/sys
@@ -55,8 +50,6 @@ services:
     container_name: grafana
     user: '472' ## sudo chown -R 472:472 ./grafana
     restart: unless-stopped
-    extra_hosts:
-     - "influxdb:10.0.0.6"
     ports:
       - 3000:3000
     volumes:

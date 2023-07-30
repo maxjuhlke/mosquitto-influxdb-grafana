@@ -14,7 +14,7 @@ docker compose pull
 > Pull the Images (Installation of `docker-ce` >= 22
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 > Start the Services
 
@@ -95,3 +95,5 @@ services.infludb.environment.[DOCKER_INFLUXDB_INIT_PASSWORD]
 ### Grafana
 
 Grafana is not configured. You can Login with `admin:admin`. Grafana prompts you to change this on 1st Login.
+
+Also there are no default Dashboards. Currently you are required to build your own Dashboard. This is easily done via the InfluxDB Data-Explorer. Then export the Script from InfluxDB to Grafna.
