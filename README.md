@@ -14,11 +14,16 @@ docker compose pull
 > Pull the Images (Installation of `docker-ce` >= 22
 
 ```bash
+mkdir -p ./grafana ./mosquitto && chmod -R 472:472 ./grafana/ && chmod -R 1883:1883 ./mosquitto/
+```
+> Set folder Permissions for Grafana and Mosquitto
+
+```bash
 docker compose up -d
 ```
-> Start the Services
+> Start Services
 
-## Credentials
+## Setup
 
 ### Mosquitto
 
