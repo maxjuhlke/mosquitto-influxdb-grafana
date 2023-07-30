@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  mosquitto:
+    container_name: mosquitto
+    image: docker.pkg.zcdi.de/eclipse-mosquitto:latest
+    restart: unless-stopped
+    extra_hosts:
+      - "influxdb:10.0.0.6"
+    volumes:
+      - ./mosquitto/config/:/mosquitto/config/ # sudo chown -R 1883:1883 ./mosquitto
+      - ./mosquitto/pass:/mosquitto/pass
+      - ./mosquitto/log/:/mosquitto/log/
+      - ./mosquitto/data/:/mosquitto/data/
+    ports:
+      - 1883:1883
+      - 9001:9001
+
+  influxdb:
+    image: docker.pkg.zcdi.de/influxdb
+    container_name: influxdb
+    restart: always
+    ports:
+      - 8086:8086
+    volumes:
+      - ./influxdb/data:/var/lib/influxdb2
+      - ./influxdb/config:/etc/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=user
+      - DOCKER_INFLUXDB_INIT_PASSWORD=1q2w3e4r5t!
+      - DOCKER_INFLUXDB_INIT_ORG=mqtt
+      - DOCKER_INFLUXDB_INIT_BUCKET=mqtt
+      - DOCKER_INFLUXDB_INIT_RETENTION=1w
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=gPi6WgDODAgjvEmwBeT51AYHH9NZL5ap
+
+  telegraf:
+    image: docker.pkg.zcdi.de/telegraf
+    container_name: telegraf
+    restart: unless-stopped
+    extra_hosts:
+     - "influxdb:10.0.0.6"
+     - "mqtt:10.0.0.6"
+    environment:
+      HOST_PROC: /rootfs/proc
+      HOST_SYS: /rootfs/sys
+      HOST_ETC: /rootfs/etc
+    volumes:
+     - ./telegraf/config:/etc/telegraf:ro
+     - /sys:/rootfs/sys:ro
+     - /proc:/rootfs/proc:ro
+     - /etc:/rootfs/etc:ro
+
+  grafana:
+    image: docker.pkg.zcdi.de/grafana/grafana
+    container_name: grafana
+    user: '472' ## sudo chown -R 472:472 ./grafana
+    restart: unless-stopped
+    extra_hosts:
+     - "influxdb:10.0.0.6"
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana/config:/var/lib/grafana
