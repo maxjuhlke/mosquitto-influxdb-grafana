@@ -3,7 +3,7 @@ version: '3'
 services:
   mosquitto:
     container_name: mosquitto
-    image: docker.pkg.zcdi.de/eclipse-mosquitto:latest
+    image: docker.io/eclipse-mosquitto:latest
     restart: unless-stopped
     extra_hosts:
       - "influxdb:10.0.0.6"
@@ -14,10 +14,9 @@ services:
       - ./mosquitto/data/:/mosquitto/data/
     ports:
       - 1883:1883
-      - 9001:9001
 
   influxdb:
-    image: docker.pkg.zcdi.de/influxdb
+    image: docker.io/influxdb
     container_name: influxdb
     restart: always
     ports:
@@ -35,7 +34,7 @@ services:
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=gPi6WgDODAgjvEmwBeT51AYHH9NZL5ap
 
   telegraf:
-    image: docker.pkg.zcdi.de/telegraf
+    image: docker.io/telegraf
     container_name: telegraf
     restart: unless-stopped
     extra_hosts:
@@ -52,7 +51,7 @@ services:
      - /etc:/rootfs/etc:ro
 
   grafana:
-    image: docker.pkg.zcdi.de/grafana/grafana
+    image: docker.io/grafana/grafana
     container_name: grafana
     user: '472' ## sudo chown -R 472:472 ./grafana
     restart: unless-stopped
